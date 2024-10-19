@@ -19,8 +19,7 @@ const columns = ref(page.props.columns ?? []);
 const query = reactive({
   page: 1,
   limit: 10,
-})
-
+});
 
 const cmOptions = {
   mode: "text/x-sql",
