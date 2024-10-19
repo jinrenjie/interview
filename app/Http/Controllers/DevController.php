@@ -50,13 +50,26 @@ class DevController extends Controller
     {
         $sql = $request->input('sql');
         
+        $result = [];
+        $columns = [];
+        
         if (stripos($sql, 'select') !== 0) {
-            throw new Exception('Only SELECT queries are allowed');
+            return Inertia::render('Dev/Index', [
+                'errors' => ['Only SELECT queries are allowed'],
+                'result' => $result,
+                'columns' => $columns
+            ]);
         }
         
-        $result = DB::select($sql);
-        
-        $columns = [];
+        try {
+            $result = DB::select($sql);
+        } catch (Exception $e) {
+            return Inertia::render('Dev/Index', [
+                'errors' => [$e->getMessage()],
+                'result' => $result,
+                'columns' => $columns
+            ]);
+        }
         
         if (!empty($result)) {
             $item = reset($result);
@@ -70,13 +83,9 @@ class DevController extends Controller
         }
         
         return Inertia::render('Dev/Index', [
+            'errors' => [],
             'result' => $result,
             'columns' => $columns
         ]);
-    }
-    
-    public function export(Request $request): BinaryFileResponse
-    {
-    
     }
 }

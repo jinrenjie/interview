@@ -10,7 +10,7 @@ import {Head, router, usePage} from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const cmRef = ref();
-const sql = ref("select * from users;");
+const sql = ref("");
 
 const page = usePage();
 const result = ref(page.props.result ?? []);
@@ -52,7 +52,6 @@ const executeSQL = () => {
       columns.value = res.props.columns;
     },
     onError: (err) => {
-      console.log(err);
       ElMessage.error(Object.values(err)[0]);
     }
   })
