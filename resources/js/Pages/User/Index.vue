@@ -147,17 +147,22 @@ function formatISO8601(isoString) {
             </div>
             <div>
               <el-table size="large" :data="users.data" style="width: 100%">
-                <el-table-column prop="id" label="ID" width="150" />
+                <el-table-column prop="id" label="ID" width="100" />
                 <el-table-column prop="name" label="Name" width="120" />
                 <el-table-column prop="email" label="Email" width="220" />
-                <el-table-column prop="role" label="Role" min-width="220">
+                <el-table-column prop="role" label="Role" min-width="200">
                   <template #default="scope">
                     <el-tag v-for="(role, index) in scope.row.roles" :key="index" size="large">{{ role }}</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column prop="updated_at" label="Updated At" min-width="220">
+                <el-table-column prop="created_at" label="Created At" min-width="180">
                   <template #default="scope">
                     <label>{{ formatISO8601(scope.row.created_at) }}</label>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="updated_at" label="Updated At" min-width="180">
+                  <template #default="scope">
+                    <label>{{ formatISO8601(scope.row.updated_at) }}</label>
                   </template>
                 </el-table-column>
                 <el-table-column label="Operations" width="120">

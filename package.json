@@ -18,6 +18,8 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "codemirror": "^5.65.18",
+        "codemirror-editor-vue3": "^2.8.0",
         "element-plus": "^2.8.6"
     }
 }

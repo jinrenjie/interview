@@ -14,7 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  *
  * @author George
  * @package App\Models
- * @property string[]|Collection $roles
+// * @property string[]|Collection $roles
  */
 class User extends Authenticatable
 {

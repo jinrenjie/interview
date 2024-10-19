@@ -34,14 +34,16 @@ class HandleInertiaRequests extends Middleware
          * @var User $user
          */
         $user = $request->user();
+        $roles = [];
         if ($user) {
-            $user->roles = $user->roles()->get()->pluck('name');
+            $roles = $user->roles()->get()->pluck('name');
         }
         
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $user,
+                'roles' => $roles,
             ],
         ];
     }

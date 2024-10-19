@@ -30,6 +30,10 @@ class UserController extends Controller
      */
     public function index(Request $request): Response
     {
+        if (!$request->user()->hasRole(['admin'])) {
+            abort(403);
+        }
+        
         $query = User::query();
         
         if ($request->get('search')) {
@@ -69,6 +73,10 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user): RedirectResponse
     {
+        if (!$request->user()->hasRole(['admin'])) {
+            abort(403);
+        }
+        
         $attributes = $request->validate([
             'name' => 'required',
             'email' => [
