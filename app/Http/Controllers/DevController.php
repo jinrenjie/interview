@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Throwable;
+use Carbon\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Str;
+use App\Models\Journal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Database\Query\Grammars\MySqlGrammar;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Date: 19/10/2024
@@ -48,27 +47,23 @@ class DevController extends Controller
      */
     public function executeSQL(Request $request): Response
     {
-        $sql = $request->input('sql');
+        $request->validate(['sql' => 'required']);
+        $sql = $request->get('sql');
         
+        $errors = [];
         $result = [];
         $columns = [];
         
         if (stripos($sql, 'select') !== 0) {
-            return Inertia::render('Dev/Index', [
-                'errors' => ['Only SELECT queries are allowed'],
-                'result' => $result,
-                'columns' => $columns
-            ]);
+            $errors[] = 'Only SELECT queries are allowed';
         }
         
         try {
-            $result = DB::select($sql);
-        } catch (Exception $e) {
-            return Inertia::render('Dev/Index', [
-                'errors' => [$e->getMessage()],
-                'result' => $result,
-                'columns' => $columns
-            ]);
+            if (empty($errors)) {
+                $result = DB::select($sql);
+            }
+        } catch (Throwable $e) {
+            $errors[] = $e->getMessage();
         }
         
         if (!empty($result)) {
@@ -82,8 +77,15 @@ class DevController extends Controller
             }
         }
         
+        Journal::create([
+            'sql' => $sql,
+            'error' => empty($errors) ? null : reset($errors),
+            'user_id' => $request->user()->id,
+            'created_at' => Carbon::now()
+        ]);
+        
         return Inertia::render('Dev/Index', [
-            'errors' => [],
+            'errors' => $errors,
             'result' => $result,
             'columns' => $columns
         ]);
