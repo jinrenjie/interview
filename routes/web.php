@@ -33,6 +33,7 @@ Route::get('/dashboard', function () {
 
 Route::group([], function () {
     Route::get('/dev', [DevController::class, 'index'])->name('dev.index');
+    Route::post('/dev', [DevController::class, 'executeSQL'])->name('dev.execute');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
 })->middleware(['auth', 'verified']);

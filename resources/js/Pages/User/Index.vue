@@ -50,7 +50,7 @@ const handleCurrentChange = (page) => {
 /**
  * Clear the search input handler.
  */
-function clearSearch() {
+const clearSearch = () => {
   query.search = '';
   searchUser();
 }
@@ -58,7 +58,7 @@ function clearSearch() {
 /**
  * Submit search form handler.
  */
-function searchUser() {
+const searchUser = () => {
   let queryParams = {
     page: query.page,
     limit: query.limit
@@ -71,11 +71,11 @@ function searchUser() {
   router.get('/users', queryParams);
 }
 
-function hiddenDialog() {
+const hiddenDialog = () => {
   editUserDialogVisible.value = false;
 }
 
-function editUserHandler(row) {
+const editUserHandler = (row) => {
   user.id = row.id;
   user.name = row.name;
   user.email = row.email;
@@ -86,7 +86,7 @@ function editUserHandler(row) {
 /**
  * Update user info handler.
  */
-function updateUserHandler() {
+const updateUserHandler = () => {
   router.put(`/users/${user.id}`, {
     name: user.name,
     email: user.email,
@@ -107,7 +107,7 @@ function updateUserHandler() {
  * @param isoString
  * @returns {string}
  */
-function formatISO8601(isoString) {
+const formatISO8601 = (isoString) => {
   const date = new Date(isoString);
 
   const year = date.getFullYear();
