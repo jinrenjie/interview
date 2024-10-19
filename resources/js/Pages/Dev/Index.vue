@@ -27,19 +27,6 @@ const cmOptions = {
   gutters: ["CodeMirror-lint-markers"],
 };
 
-const onChange = (val, cm) => {
-  console.log(val);
-  console.log(cm.getValue());
-};
-
-const onInput = (val) => {
-  console.log(val);
-};
-
-const onReady = (cm) => {
-  console.log(cm.focus());
-};
-
 const formatSQL = () => {
   sql.value = format(sql.value, {language: 'mysql'});
 }
@@ -147,7 +134,6 @@ const handleCurrentChange = (page) => {
                 <el-col :span="24">
                   <Codemirror class="sql-code font-sans rounded border-slate-100" v-model:value="sql"
                               :options="cmOptions" border ref="cmRef" height="100"
-                              @change="onChange" @input="onInput" @ready="onReady"
                   >
                   </Codemirror>
                 </el-col>
