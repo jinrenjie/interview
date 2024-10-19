@@ -22,7 +22,7 @@ docker run -it --rm -v ${PWD}:/app node:20.18.0 sh -c 'cd /app && npm install &&
 The project comes with preloaded data populated through Seeders. You can log in using the account below to verify the functionality directly:
 
 * Email: echo@example.com Password: echo
-* Email: georg@eexample.com Password: george
+* Email: george@example.com Password: george
 
 # Screenshot
 
