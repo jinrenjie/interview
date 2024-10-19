@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Database\Query\Grammars\MySqlGrammar;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Date: 19/10/2024
@@ -72,5 +73,10 @@ class DevController extends Controller
             'result' => $result,
             'columns' => $columns
         ]);
+    }
+    
+    public function export(Request $request): BinaryFileResponse
+    {
+    
     }
 }

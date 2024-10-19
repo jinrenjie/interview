@@ -21,6 +21,7 @@
         "codemirror": "^5.65.18",
         "codemirror-editor-vue3": "^2.8.0",
         "element-plus": "^2.8.6",
+        "exceljs": "^4.4.0",
         "sql-formatter": "^15.4.4"
     }
 }

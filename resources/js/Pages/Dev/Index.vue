@@ -1,14 +1,16 @@
 <script setup>
-import {ref, reactive, computed} from "vue";
-import "codemirror/mode/sql/sql.js"
+import ExcelJS from 'exceljs';
+import 'codemirror/mode/sql/sql.js';
 import { format } from 'sql-formatter';
-import {ElMessage} from "element-plus";
-import Codemirror from "codemirror-editor-vue3";
-import {Head, router, usePage} from "@inertiajs/vue3";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import {ElMessage} from 'element-plus';
+import {ref, reactive, computed} from 'vue';
+import Codemirror from 'codemirror-editor-vue3';
+import {ArrowDown} from '@element-plus/icons-vue';
+import {Head, router, usePage} from '@inertiajs/vue3';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 const cmRef = ref();
-const sql = ref("");
+const sql = ref("select * from users;");
 
 const page = usePage();
 const result = ref(page.props.result ?? []);
@@ -56,6 +58,60 @@ const executeSQL = () => {
   })
 }
 
+/**
+ * Export to json file handler.
+ */
+const exportJSON = () => {
+  if (result.value.length === 0) {
+    ElMessage.error('The query result is empty, Can not export to json file.');
+  }
+
+  let filename = 'download.json';
+  let data = JSON.stringify(result.value, undefined, 4);
+  let blob = new Blob([data], {type: 'application/json'});
+  let element = document.createElement("a");
+  let url = URL.createObjectURL(blob);
+  element.href = url
+  element.download = filename
+  element.click();
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Export to excel file handler.
+ */
+const exportExcel = () => {
+  if (result.value.length === 0) {
+    ElMessage.error('The query result is empty, Can not export to json file.');
+  }
+
+  let filename = 'download.xlsx';
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Sheet 1');
+  let colKeys = columns.value.map(item => ({ header: item.prop, key: item.prop }));
+  let rows = [];
+  for (let item of result.value) {
+    rows.push(item);
+  }
+  worksheet.columns = colKeys;
+  worksheet.addRows(rows);
+  workbook.xlsx.writeBuffer().then((buffer) => {
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = URL.createObjectURL(blob);
+    const element = document.createElement("a");
+    element.href = url;
+    element.download = filename;
+    element.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+/**
+ * Front-end pagination handler
+ * @type {ComputedRef<any>}
+ */
 const paginateHandler = computed(() => {
   return result.value.slice((query.page - 1) * query.limit, query.page * query.limit)
 })
@@ -101,10 +157,22 @@ const handleCurrentChange = (page) => {
             </div>
             <div class="pt-4">
               <el-row :gutter="20">
-                <el-col :span="12"></el-col>
-                <el-col :span="12" class="text-right">
+                <el-col :span="12">
                   <el-button size="large" plain @click="formatSQL">Format</el-button>
                   <el-button type="primary" size="large" plain @click="executeSQL">Execute</el-button>
+                </el-col>
+                <el-col :span="12" class="text-right">
+                  <el-dropdown :disabled="result.length === 0" size="large">
+                    <el-button :disabled="result.length === 0" size="large" plain>
+                      Export<el-icon class="el-icon--right"><arrow-down /></el-icon>
+                    </el-button>
+                    <template #dropdown>
+                      <el-dropdown-menu>
+                        <el-dropdown-item @click="exportExcel">Excel file</el-dropdown-item>
+                        <el-dropdown-item @click="exportJSON">JSON file</el-dropdown-item>
+                      </el-dropdown-menu>
+                    </template>
+                  </el-dropdown>
                 </el-col>
               </el-row>
             </div>
